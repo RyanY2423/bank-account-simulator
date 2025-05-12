@@ -6,3 +6,47 @@
 from tkinter import *
 from tkinter import messagebox
 import matplotlib
+
+#initial balance, set at 0 as there is no accounts yet
+balance = 0
+transaction_histroy = []
+
+#function for withdrawing money
+def withdraw(balance):
+    amount = int(input("Enter amount to withdraw: "))
+    if amount > balance:
+        print("Insufficient funds")
+    else:
+        balance -= amount
+        transaction_histroy.append(f"Withdrew {amount}")
+    return balance
+        
+#function for depositing money
+def deposit(balance):
+    amount = int(input("Enter amount to deposit: "))
+    balance += amount
+    transaction_histroy.append(f"Deposited {amount}")
+    return balance
+    
+def user_balance(balance):
+    print("Your balance is: ", balance)
+
+def user_histroy():
+    print("Transaction history: ")
+    for transaction in transaction_histroy:
+        print(transaction)
+
+#selecting users action
+while True:
+    user_balance(balance)
+    user_action = input("Enter 'd' to deposit, 'w' to withdraw, or 'h' balance_history, or 'e' to exit: ")
+    if user_action == 'd': 
+        balance = deposit(balance)
+    elif user_action == 'w':
+        balance = withdraw(balance)
+    elif user_action == 'h':
+        user_histroy()
+    elif user_action == 'e':
+        break
+    else:
+        print("Invalid action")
