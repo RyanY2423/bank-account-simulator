@@ -37,7 +37,10 @@ def user_histroy():
         print(transaction)
 
 #selecting users action
+print("create your account")
+account_name = input("Enter your name: ")
 while True:
+    print(f"account name: {account_name}")
     user_balance(balance)
     user_action = input("Enter 'd' to deposit, 'w' to withdraw, or 'h' balance_history, or 'e' to exit: ")
     if user_action == 'd': 
