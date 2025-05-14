@@ -10,20 +10,34 @@ import matplotlib
 #initial balance, set at 0 as there is no accounts yet
 balance = 0
 transaction_histroy = []
+amount = 0
 
 #function for withdrawing money
-def withdraw(balance):
-    amount = int(input("Enter amount to withdraw: "))
+def withdraw(balance,amount):
+    while True:
+        try:
+            amount = int(input("Enter amount to withdraw: "))
+            break
+        except ValueError:
+            print("Invalid input. Please enter a valid number.")
+        
     if amount > balance:
         print("Insufficient funds")
     else:
         balance -= amount
         transaction_histroy.append(f"Withdrew {amount}")
     return balance
+
+        
         
 #function for depositing money
 def deposit(balance):
-    amount = int(input("Enter amount to deposit: "))
+    while True:
+        try:
+            amount = int(input("Enter amount to deposit: "))
+            break
+        except ValueError:
+            print("Invalid input. Please enter a valid number.")
     balance += amount
     transaction_histroy.append(f"Deposited {amount}")
     return balance
@@ -42,14 +56,15 @@ account_name = input("Enter your name: ")
 while True:
     print(f"account name: {account_name}")
     user_balance(balance)
-    user_action = input("Enter 'd' to deposit, 'w' to withdraw, or 'h' balance_history, or 'e' to exit: ")
+    user_action = input("Enter 'd' to deposit, 'w' to withdraw, or 'h' balance_history, or 'e' to exit: ").lower()
     if user_action == 'd': 
         balance = deposit(balance)
     elif user_action == 'w':
-        balance = withdraw(balance)
+        balance = withdraw(balance,amount)
     elif user_action == 'h':
         user_histroy()
     elif user_action == 'e':
         break
     else:
         print("Invalid action")
+ 
