@@ -29,7 +29,6 @@ def withdraw(balance,amount):
     return balance
 
         
-        
 #function for depositing money
 def deposit(balance):
     while True:
@@ -42,15 +41,24 @@ def deposit(balance):
     transaction_histroy.append(f"Deposited {amount}")
     return balance
     
+#function to show the balance    
 def user_balance(balance):
     print("Your balance is: ", balance)
 
+#function to show the transaction history
 def user_histroy():
     print("Transaction history: ")
     for transaction in transaction_histroy:
         print(transaction)
 
+#main program
+#creating a window
+root = Tk()
+root.title("Bank Account Simulator")
+root.geometry("800x600")
+
 #selecting users action
+'''
 print("create your account")
 account_name = input("Enter your name: ")
 while True:
@@ -67,4 +75,29 @@ while True:
         break
     else:
         print("Invalid action")
+'''
+
+#creating labels for the main page
+label = Label(root, text=f"your balance is: ${balance}")
+label.grid(row=0, column=0, padx=10, pady=10,columnspan=4)
+label = Label(root, text=f"location for later use (deposit withdraw and history functions)")
+label.grid(row=2, column=0, padx=10, pady=10,columnspan=4)
+
+#buttons for user actions
+#deposit
+deposit_button = Button(root, text="Deposit", )
+deposit_button.grid(row=3, column=0, padx=5, pady=10)
+#withdraw
+withdraw_button = Button(root, text="Withdraw", )
+withdraw_button.grid(row=3, column=1, padx=5, pady=10)
+#transaction history
+history_button = Button(root, text="History", )
+history_button.grid(row=3, column=2, padx=5, pady=10)
+
+#button to quit the program
+close = Button(root, text="Close", command=root.quit)
+close.grid(row=3, column=3, padx=5, pady=10)
+
+#running the main loop
+root.mainloop()
  
