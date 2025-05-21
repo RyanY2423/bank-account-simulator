@@ -32,26 +32,50 @@ def withdraw(balance,amount):
 
         
 #function for depositing money
-def deposit(balance):
+def deposit():
 
     #sets up the label and entry box for the deposits
-    deposit_amount = Entry()
-    deposit_amount.grid(row=2, column=0, padx=10, pady=10,columnspan=4,)
+    deposit_amounts = Entry()
+    deposit_amounts.grid(row=2, column=0, padx=10, pady=10,columnspan=4,)
     amount_label = Label(root, text="Enter amount to deposit: ")
     amount_label.grid(row=1, column=0, padx=10, pady=10,columnspan=4)
-    submit_button = Button(root, text="Submit", command=lambda: submit(deposit_amount))
+    submit_button = Button(root, text="Submit", command=lambda: deposit_submit(deposit_amounts,amount_label,submit_button))
     submit_button.grid(row=3, column=0, padx=10, pady=10,columnspan=4)
 
 
 
-#function to submit deposit and withdraw
-def submit(deposit_amount):
+#function to submit deposit 
+def deposit_submit(deposit_amounts,amount_label,submit_button):
     global balance
-    balance += int(deposit_amount.get())
+    try:
+        #checks if the deposit amount is a number
+        deposit_amount = int(deposit_amounts.get())
+        if deposit_amount < 0:
+            #if the amount is negative it will give an error
+            raise ValueError
+        balance += int(deposit_amount)
+        transaction_histroy.append(f"Deposited {deposit_amount}")
+        shown_balance.config(text=f"Your balance is: ${balance}")
+        #removing the deposit amount entry and label
+        deposit_amounts.destroy()  
+        amount_label.destroy()  
+        submit_button.destroy() 
+        label.config(text="deposit succesful",fg="black")
+    except ValueError:
+        label.config(text="Invalid input. Please enter a valid number.")
+
+
+#function to submiot withdraw
+def withdraw_submit(withdraw_amount):
+    global balance
+    balance -= int(deposit_amount.get())
+    if balance < 0:
+        label.config(text="Insufficient funds")
     print(balance)
     print(f"Deposited {deposit_amount.get()}")
     transaction_histroy.append(f"Deposited {deposit_amount.get()}")
     shown_balance.config(text=f"Your balance is: ${balance}")
+
 
 
     
@@ -71,37 +95,17 @@ root = Tk()
 root.title("Bank Account Simulator")
 root.geometry("800x600")
 
-#selecting users action
-#previous version code
-'''
-print("create your account")
-account_name = input("Enter your name: ")
-while True:
-    print(f"account name: {account_name}")
-    user_balance(balance)
-    user_action = input("Enter 'd' to deposit, 'w' to withdraw, or 'h' balance_history, or 'e' to exit: ").lower()
-    if user_action == 'd': 
-        balance = deposit(balance)
-    elif user_action == 'w':
-        balance = withdraw(balance,amount)
-    elif user_action == 'h':
-        user_histroy()
-    elif user_action == 'e':
-        break
-    else:
-        print("Invalid action")
-'''
 
 #creating labels for the main page
 
 shown_balance = Label(root, text=f"your balance is: ${balance}")
 shown_balance.grid(row=0, column=0, padx=5, pady=10,columnspan=4)
-label = Label(root, text=f"location for later use (deposit withdraw and history functions)")
+label = Label(root, text=f"",fg="red")
 label.grid(row=1, column=0, padx=5, pady=10,columnspan=4,rowspan=2)
 
 #buttons for user actions
 #deposit
-deposit_button = Button(root, text="Deposit", command=lambda:deposit(balance))
+deposit_button = Button(root, text="Deposit", command=lambda:deposit())
 deposit_button.grid(row=4, column=0, padx=5, pady=10)
 #withdraw
 withdraw_button = Button(root, text="Withdraw", )
