@@ -6,11 +6,13 @@ from tkinter import *
 import datetime
 #import matplotlib
 
-#initial balance, set at 0 as there is no accounts yet
+#initial constants
 balance = 0
-transaction_histroy = ["test","test","test","test","test","test","test","test","test","test","test","test","test","test","test","test","test","test","test","test","test","test","test","test"]
+transaction_histroy = []
+user_info = {} #{"username": "password"} 
 amount = 0
 deposit_amount = 0
+#time for transaction data
 time = datetime.date.today()
 time = time.strftime("%a %d %b %Y")
 
@@ -20,20 +22,18 @@ time = time.strftime("%a %d %b %Y")
 def deposit():
     #clrear any labels
     label.config(text="")
-    #deletes inputs for withdraw to prevent overlapping	
-    deposit_button.grid_forget()
-    withdraw_button.grid_forget()
-    history_button.grid_forget()
-    cancel_button = Button(root, text="Cancel", command=lambda:cancel(entered_amounts,amount_label,submit_button,cancel_button))
-    cancel_button.grid(row=3, column=1, padx=5, pady=10)
     #sets up the label and entry box for the deposits
-    entered_amounts = Entry()
+    #clears the entry box for previous enters
+    entered_amounts.delete(0,"end")
     entered_amounts.grid(row=2, column=1, padx=10, pady=10,columnspan=4,)
-    amount_label = Label(root, text="Enter amount to deposit: ")
+    #shows label
+    amount_label.configure(text="Enter amount to deposit: ")
     amount_label.grid(row=1, column=1, padx=10, pady=10,columnspan=4)
-    submit_button = Button(root, text="Submit", command=lambda: deposit_submit(entered_amounts,amount_label,submit_button,cancel_button))
+    #submit_button = Button(root, text="Submit", command=lambda: deposit_submit(entered_amounts,amount_label,submit_button,cancel_button))
+    submit_button.configure(command=lambda: deposit_submit(entered_amounts,amount_label,submit_button,cancel_button))
     submit_button.grid(row=3, column=2, padx=10, pady=10)
-
+    #adds cancel button
+    cancel_button.grid(row=3, column=3, padx=5, pady=10)
 
 
 #function to submit deposit 
@@ -48,16 +48,14 @@ def deposit_submit(entered_amounts,amount_label,submit_button,cancel_button):
         balance += int(deposit_amount)
         transaction_histroy.append(f"{time} - Deposited {deposit_amount} ")
         shown_balance.config(text=f"Your balance is: ${balance}")
-        #removing the deposit amount entry and label
-        entered_amounts.destroy()  
-        amount_label.destroy()  
-        submit_button.destroy() 
+
+        #removing entry information
+        entered_amounts.grid_forget()  
+        amount_label.grid_forget()  
+        submit_button.grid_forget()
         label.config(text="deposit succesful",fg="black")
-        #returning the buttons
-        deposit_button.grid(row=3, column=1, padx=5, pady=10)
-        withdraw_button.grid(row=3, column=2, padx=5, pady=10)
-        history_button.grid(row=3, column=3, padx=5, pady=10)
-        cancel_button.destroy()
+
+        cancel_button.grid_forget()
     except ValueError:
         label.config(text="Invalid input. Please enter a valid number.",fg="red")
 
@@ -66,19 +64,21 @@ def deposit_submit(entered_amounts,amount_label,submit_button,cancel_button):
 def withdraw():
     #clrear any labels
     label.config(text="")
-    #deletes inputs for deposit to prevent overlapping
-    deposit_button.grid_forget()
-    withdraw_button.grid_forget()
-    history_button.grid_forget()
+
     #sets up the label and entry box for the withdraw
-    entered_amounts = Entry()
+    entered_amounts.delete(0,"end")
     entered_amounts.grid(row=2, column=1, padx=10, pady=10,columnspan=4,)
-    amount_label = Label(root, text="Enter amount to withdraw: ")
+
+    #adds amount labels
+    amount_label.configure(text="Enter amount to withdraw: ")
     amount_label.grid(row=1, column=1, padx=10, pady=10,columnspan=4)
-    submit_button = Button(root, text="Submit", command=lambda: withdraw_submit(entered_amounts,amount_label,submit_button,cancel_button))
-    submit_button.grid(row=3, column=2, padx=10, pady=10)
-    cancel_button = Button(root, text="Cancel", command=lambda:cancel(entered_amounts,amount_label,submit_button,cancel_button))
-    cancel_button.grid(row=3, column=1, padx=5, pady=10)
+
+    #adds submit button
+    submit_button.configure(command=lambda: withdraw_submit(entered_amounts,amount_label,submit_button,cancel_button))
+    submit_button.grid(row=3, column=2, padx=5, pady=10)
+
+    #adds cancel button
+    cancel_button.grid(row=3, column=3, padx=5, pady=10)
 
 
 #function to submiot withdraw
@@ -97,16 +97,16 @@ def withdraw_submit(entered_amounts,amount_label,submit_button,cancel_button):
         balance -= int(withdraw_amount)
         transaction_histroy.append(f"{time} - withdrew {withdraw_amount}")
         shown_balance.config(text=f"Your balance is: ${balance}")
-        #removing the deposit amount entry and label
-        entered_amounts.destroy()  
-        amount_label.destroy()  
-        submit_button.destroy() 
+
+        #removing entry information
+        entered_amounts.grid_forget()  
+        amount_label.grid_forget()  
+        submit_button.grid_forget()
         label.config(text="withdraw succesful",fg="black")
-        #returning the buttons
-        deposit_button.grid(row=3, column=1, padx=5, pady=10)
-        withdraw_button.grid(row=3, column=2, padx=5, pady=10)
-        history_button.grid(row=3, column=3, padx=5, pady=10)
-        cancel_button.destroy()
+
+        #removing cancel button
+        cancel_button.grid_forget()
+    #catching errors
     except ValueError:
         if withdraw_amount > balance:
             label.config(text="insufficient funds",fg="red")
@@ -115,19 +115,14 @@ def withdraw_submit(entered_amounts,amount_label,submit_button,cancel_button):
 
 #function for canceling actions such as deposit and withdraw
 def cancel(entered_amounts,amount_label,submit_button,cancel_button):
-    #removing the deposit amount entry and label
-    entered_amounts.destroy()  
-    amount_label.destroy()  
-    submit_button.destroy() 
+    #removing entry information
+    entered_amounts.grid_forget()  
+    amount_label.grid_forget()  
+    submit_button.grid_forget()
     label.config(text="cancelled",fg="black")
-    #recreating the buttons
-    deposit_button.grid(row=3, column=1, padx=5, pady=10)
-    withdraw_button.grid(row=3, column=2, padx=5, pady=10)
-    history_button.grid(row=3, column=3, padx=5, pady=10)
+
     #removing itself
-    cancel_button.destroy()
-
-
+    cancel_button.grid_forget()
 
 
 #function to show the transaction history
@@ -165,10 +160,77 @@ def user_histroy():
     for transaction in transaction_histroy:
         transaction = Label(history_frame, text=transaction, font=("Arial", 12),bg="green")
         transaction.pack(anchor="w", padx=10, pady=5)
-    history.mainloop()
-        
-        
 
+
+def signup():
+    #removing the login and signup buttons
+    login_button.grid_forget()
+    signup_button.grid_forget()
+
+    login_label.config(text="Create an account")
+    age_label = Label(login_screen, text="Age:")
+    age_label.grid(row=2, column=1, padx=5, pady=10)
+    age = Entry(login_screen)  
+    age.grid(row=2, column=2, padx=5, pady=10)
+    username_label = Label(login_screen, text="Username:")
+    username_label.grid(row=3, column=1, padx=5, pady=10)
+    username = Entry(login_screen)
+    username.grid(row=3, column=2, padx=5, pady=10)
+    password_label = Label(login_screen, text="Password:")
+    password_label.grid(row=4, column=1, padx=5, pady=10)
+    password = Entry(login_screen)
+    password.grid(row=4, column=2, padx=5, pady=10)
+    confirm_password_label = Label(login_screen, text="Confirm Password:") 
+    confirm_password_label.grid(row=5, column=1, padx=5, pady=10)
+    confirm_password = Entry(login_screen)
+    confirm_password.grid(row=5, column=2, padx=5, pady=10)
+    signup_submit_button = Button(login_screen, text="Submit", command=lambda: signup_submit(username,password,confirm_password,error_label,age), bd=0)
+    signup_submit_button.grid(row=6, column=2, padx=5, pady=10)
+    error_label = Label(login_screen, text="", fg="red")
+    
+
+def signup_submit(username,password,confirm_password,error_label,age):
+    try:
+        if username.get().strip(" ") == "" or password.get() == "" or confirm_password.get() == "":
+            error_label.grid(row=1, column=1, columnspan=2, padx=5, pady=10)
+            error_label.config(text="All fields are required", fg="red")
+        elif password.get() != confirm_password.get():
+                error_label.grid(row=1, column=1, columnspan=2, padx=5, pady=10)
+                error_label.config(text="Passwords do not match", fg="red")
+        elif int(age.get()) <=13:
+            error_label.grid(row=1, column=1, columnspan=2, padx=5, pady=10)
+            error_label.config(text="You must be at least 13 years old to create an account", fg="red")
+        else:
+            #saves the users information in a dictionary
+            user_info[username.get()] = password.get()
+            print(user_info)
+            #removes the signup page
+            login_screen.destroy()
+    except ValueError:
+        error_label.grid(row=1, column=1, columnspan=2, padx=5, pady=10)
+        error_label.config(text="Invalid age. Please enter a valid number.", fg="red")
+
+
+        
+#setting up login signup screen
+login_screen = Tk()
+login_screen.title("Bank Account login")
+login_screen.geometry("800x600")
+
+#centering the items
+login_screen.grid_columnconfigure(0, weight=1)
+login_screen.grid_columnconfigure(5, weight=1)
+
+#creating a label for the login screen
+login_label = Label(login_screen, text="Welcome to the Bank Account Simulator")
+login_label.grid(row=0, column=1, padx=5, pady=10, columnspan=4)
+login_button = Button(login_screen, text="Login", command=lambda: signup(), bd=0)
+login_button.grid(row=1, column=2, padx=5, pady=10)
+signup_button = Button(login_screen, text="signup", command=lambda: signup(), bd=0)
+signup_button.grid(row=1, column=3, padx=5, pady=10)
+
+#running the login screen
+login_screen.mainloop()
 
 #main program
 #creating a window
@@ -194,43 +256,33 @@ label.grid(row=1, column=1, padx=5, pady=10,columnspan=4,rowspan=2)
 
 
 #buttons for user actions
-#deposit
-deposit_button = Button(root, text="Deposit", command=lambda:deposit())
-deposit_button.grid(row=3, column=1, padx=5, pady=10)
-#withdraw
-withdraw_button = Button(root, text="Withdraw", command=lambda:withdraw())
-withdraw_button.grid(row=3, column=2, padx=5, pady=10)
-#transaction history
-history_button = Button(root, text="History",command=lambda:user_histroy() )
-history_button.grid(row=3, column=3, padx=5, pady=10)
-
-#button to quit the program
-close = Button(root, text="Close", command=root.quit)
-close.grid(row=3, column=4, padx=5, pady=10)
-
-
-#this is for testing purposes
+#frame for astethics
 left_col_frame = Frame(root, bg="lightgray", width=50)
 left_col_frame.grid(row=0, column=0, rowspan=10, sticky="nsew")
 
+#deposit button
 deposit_button = Button(root, text="Deposit", command=lambda:deposit(),bd=0)
 deposit_button.grid(row=1, column=0, padx=5, pady=10)
 
+#withdraw button
 withdraw_button = Button(root, text="Withdraw", command=lambda:withdraw(),bd=0)
 withdraw_button.grid(row=2, column=0, padx=5, pady=10)
 
+#history button
 history_button = Button(root, text="History",command=lambda:user_histroy(), bd=0)
 history_button.grid(row=3, column=0, padx=5, pady=10)
 
+#close button
 close = Button(root, text="Close", command=root.quit,bd=0)
 close.grid(row=4, column=0, padx=5, pady=10)
 
+#entery information
+entered_amounts = Entry()
+amount_label = Label(root, text="Enter amount to deposit: ")
+submit_button = Button(root, text="Submit", command=lambda: deposit_submit(entered_amounts,amount_label,submit_button,cancel_button))
+cancel_button = Button(root, text="Cancel", command=lambda:cancel(entered_amounts,amount_label,submit_button,cancel_button))
 
-
-button = Button(root, text="Button with No Background", highlightthickness=0, bd=0, relief="flat")
-button.grid
-#running the main loop
+#running the main loop, will run after the login screen is closed
 root.mainloop()
-
 
 
