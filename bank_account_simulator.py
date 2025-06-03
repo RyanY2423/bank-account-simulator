@@ -131,35 +131,65 @@ def user_histroy():
     history.title("Transaction History")
     history.geometry("400x400")
 
-#making the main frame to put the canvas
+    # Main frame
     main_frame = Frame(history)
     main_frame.pack(fill=BOTH, expand=1)
 
-#creating the canvas
+    # Canvas
     canvas = Canvas(main_frame, bg="blue")
-    canvas.pack(side=LEFT, fill=BOTH, expand=1)
+    canvas.pack(side=LEFT, fill=BOTH, expand=True)
 
-#letting the scrollbar be scrolled with a mouse 
-    canvas.bind_all('<MouseWheel>', lambda event: canvas.yview_scroll(-int(event.delta / 50), "units"))
-    
-#makling the scrollbar
+    # Scrollbar
     my_scrollbar = Scrollbar(main_frame, orient=VERTICAL, command=canvas.yview)
-    my_scrollbar.pack(side=RIGHT, fill=Y)
-
-#moving the scorllbar
+    my_scrollbar.place(relx=1, rely=0, relheight=1, anchor="ne")
     canvas.configure(yscrollcommand=my_scrollbar.set)
-    canvas.bind('<Configure>', lambda e: canvas.configure(scrollregion=canvas.bbox("all")))
 
-    #creating a frame for the history
-    history_frame = Frame(canvas,bg="green")
+    # Frame inside canvas
+    history_frame = Frame(canvas, bg="green")
     canvas.create_window((0, 0), window=history_frame, anchor="nw")
 
-    label = Label(history_frame, text="Transaction History", font=("Arial", 20),background=None)
+    # Track scrollability
+    can_scroll_verticaly = [False]
+    can_scroll_horizontaly = [False]
+
+    # Update scrollregion and scrollability flags
+    def update_scroll_flags():
+        canvas.update_idletasks()
+        bbox = canvas.bbox("all")
+        if bbox:
+            canvas.configure(scrollregion=bbox)
+            canvas_width = canvas.winfo_width()
+            canvas_height = canvas.winfo_height()
+            content_width = bbox[2] - bbox[0]
+            content_height = bbox[3] - bbox[1]
+            can_scroll_verticaly[0] = content_height > canvas_height
+            can_scroll_horizontaly[0] = content_width > canvas_width
+
+    def delayed_update(event=None):
+        history.after(50, update_scroll_flags)
+
+    canvas.bind("<Configure>", delayed_update)
+
+    # Mouse wheel events
+    def on_mouse_wheel(event):
+        if can_scroll_verticaly[0]:
+            canvas.yview_scroll(-int(event.delta / 50), "units")
+
+    def on_shift_mouse_wheel(event):
+        if can_scroll_horizontaly[0]:
+            canvas.xview_scroll(-int(event.delta / 50), "units")
+
+    canvas.bind_all("<MouseWheel>", on_mouse_wheel)
+    canvas.bind_all("<Shift-MouseWheel>", on_shift_mouse_wheel)
+
+    # Header
+    label = Label(history_frame, text="Transaction History", font=("Arial", 20), bg="red")
     label.pack()
-#shows all transactions
+
+    # Transaction content
     for transaction in transaction_histroy:
-        transaction = Label(history_frame, text=transaction, font=("Arial", 12),bg="green")
-        transaction.pack(anchor="w", padx=10, pady=5)
+        transaction_label = Label(history_frame, text=transaction, font=("Arial", 12), bg="green")
+        transaction_label.pack(anchor="w", padx=10, pady=5)
 
 
 def signup():
@@ -185,7 +215,7 @@ def signup():
     confirm_password = Entry(login_screen)
     confirm_password.grid(row=5, column=2, padx=5, pady=10)
     signup_submit_button = Button(login_screen, text="Submit", command=lambda: signup_submit(username,password,confirm_password,error_label,age), bd=0)
-    signup_submit_button.grid(row=6, column=2, padx=5, pady=10)
+    signup_submit_button.grid(row=6, column=1, padx=5, pady=10,columnspan=2)
     error_label = Label(login_screen, text="", fg="red")
     
 
@@ -197,7 +227,7 @@ def signup_submit(username,password,confirm_password,error_label,age):
         elif password.get() != confirm_password.get():
                 error_label.grid(row=1, column=1, columnspan=2, padx=5, pady=10)
                 error_label.config(text="Passwords do not match", fg="red")
-        elif int(age.get()) <=13:
+        elif int(age.get()) <13:
             error_label.grid(row=1, column=1, columnspan=2, padx=5, pady=10)
             error_label.config(text="You must be at least 13 years old to create an account", fg="red")
         else:
@@ -205,10 +235,13 @@ def signup_submit(username,password,confirm_password,error_label,age):
             user_info[username.get()] = password.get()
             print(user_info)
             #removes the signup page
+            root.deiconify()
             login_screen.destroy()
+            
     except ValueError:
         error_label.grid(row=1, column=1, columnspan=2, padx=5, pady=10)
         error_label.config(text="Invalid age. Please enter a valid number.", fg="red")
+        
 
 
         
@@ -230,7 +263,7 @@ signup_button = Button(login_screen, text="signup", command=lambda: signup(), bd
 signup_button.grid(row=1, column=3, padx=5, pady=10)
 
 #running the login screen
-login_screen.mainloop()
+#login_screen.mainloop()
 
 #main program
 #creating a window
@@ -277,12 +310,14 @@ close = Button(root, text="Close", command=root.quit,bd=0)
 close.grid(row=4, column=0, padx=5, pady=10)
 
 #entery information
-entered_amounts = Entry()
+entered_amounts = Entry(root)
 amount_label = Label(root, text="Enter amount to deposit: ")
 submit_button = Button(root, text="Submit", command=lambda: deposit_submit(entered_amounts,amount_label,submit_button,cancel_button))
 cancel_button = Button(root, text="Cancel", command=lambda:cancel(entered_amounts,amount_label,submit_button,cancel_button))
 
 #running the main loop, will run after the login screen is closed
-root.mainloop()
+#root.mainloop()
+root.withdraw()  
 
-
+#running the login screen
+login_screen.mainloop()
