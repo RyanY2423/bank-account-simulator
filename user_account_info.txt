@@ -1,0 +1,2 @@
+username,password,0
+123,123,100
