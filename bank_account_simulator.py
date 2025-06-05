@@ -6,7 +6,7 @@ from tkinter import *
 import datetime
 #import matplotlib
 import os
-
+import json
 
 #making sure the current directory is the same as the file
 os.chdir(os.path.dirname(os.path.abspath(__file__)))
@@ -53,7 +53,7 @@ def signup():
     
 
 def signup_submit(username,password,confirm_password,error_label,age):
-    try:
+    try:      
         if username.get().strip(" ") == "" or password.get() == "" or confirm_password.get() == "":
             error_label.grid(row=1, column=1, columnspan=2, padx=5, pady=10)
             error_label.config(text="All fields are required", fg="red")
@@ -65,20 +65,27 @@ def signup_submit(username,password,confirm_password,error_label,age):
             error_label.config(text="You must be at least 13 years old to create an account", fg="red")
         else:
             #saves the users information in a dictionary will be removed later
-            with open("user_account_info.txt", "a") as file:
-                users_information = file.readlines
+            with open("user_account_info.json", "r") as file:
+                users_information = json.load(file)
+                print(users_information)
                 for does_user_exist in users_information:
-                    print(does_user_exist.strip("\n").split(",")[0])
-                    if does_user_exist.strip("\n").split(",")[0] == username.get():
+                    #print(does_user_exist)
+                    if does_user_exist["username"] == username.get():
                         error_label.grid(row=1, column=1, columnspan=2, padx=5, pady=10)
-                        error_label.config(text="Username already exists", fg="red")
+                        error_label.config(text="account already exists", fg="red")
+                        file.close
                         return
-                file.write(f"\n{username.get()},{password.get()},{balance}")
+                    
+                file.close
+                user_username = username.get()
+                user_password = password.get()
+                with open("user_account_info.json","w") as file:
+                    users_information.append({'username': user_username, 'password': user_password, 'balance': balance, 'transaction_history': transaction_history})
+                    json.dump(users_information,file,indent=2)
             #gathers user information
             #removes the signup page
             main_program()
-            login_screen.destroy()
-            
+            login_screen.destroy()        
     except ValueError:
         error_label.grid(row=1, column=1, columnspan=2, padx=5, pady=10)
         error_label.config(text="Invalid age. Please enter a valid number.", fg="red")
@@ -102,18 +109,21 @@ def login():
 
 def login_submit(username,password):
     global balance
-    with open("user_account_info.txt", "r") as file:
-        users_information = file.readlines()
+    with open("user_account_info.json", "r") as file:
+        users_information = json.load(file)
         print(users_information)
+        print(type(users_information))
         for does_user_exist in users_information:
             
             print(does_user_exist)
-            print(does_user_exist.strip("\n").split(",")[0])
-            if does_user_exist.strip("\n").split(",")[0] == username.get():
+        #     print(does_user_exist.strip("\n").split(",")[0])
+            if does_user_exist["username"] == username.get():
                 
-                user_username = does_user_exist.split(",")[0]
-                user_password = does_user_exist.split(",")[1]
-                balance = float(does_user_exist.split(",")[2])
+                user_username = does_user_exist["username"]
+                user_password = does_user_exist["password"]
+                print(user_username)
+                print(user_password)
+                balance = float(does_user_exist["balance"])
                 print(balance)
                 if user_password != password.get():
                     print("incorrect password")
@@ -122,8 +132,9 @@ def login_submit(username,password):
                     print(password)
                     main_program() # Call the main program function	
                     login_screen.destroy() 
+                    print(users_information[user_info_location])
                     return
-            user_info_location = user_info_location+1
+        #     user_info_location = user_info_location+1
         print("user does not exist")
         
                 
@@ -309,6 +320,14 @@ def main_program():
 
     def close_program():
         open("practices/file practice/close.txt", "w").close()  # Create or clear the file
+        with open('example.txt', 'r', encoding='utf-8') as file:
+            data = file.readlines()
+
+        print(data)
+        data[1] = "Here is my modified Line 2\n"
+
+        with open('example.txt', 'w', encoding='utf-8') as file:
+            file.writelines(data)
         root.quit()
 
     
@@ -386,3 +405,35 @@ signup_button = Button(login_screen, text="signup", command=lambda: signup(), bd
 signup_button.grid(row=1, column=3, padx=5, pady=10)
 #running the login screen
 login_screen.mainloop()
+
+
+
+
+#file code if things don't work out
+'''
+with open("user_account_info.txt", "r") as file:
+        users_information = file.readlines()
+        print(users_information)
+        for does_user_exist in users_information:
+            
+            print(does_user_exist)
+            print(does_user_exist.strip("\n").split(",")[0])
+            if does_user_exist.strip("\n").split(",")[0] == username.get():
+                
+                user_username = does_user_exist.split(",")[0]
+                user_password = does_user_exist.split(",")[1]
+                balance = float(does_user_exist.split(",")[2])
+                print(balance)
+                if user_password != password.get():
+                    print("incorrect password")
+                    return
+'''
+'''users_information = file.readlines
+                for does_user_exist in users_information:
+                    print(does_user_exist.strip("\n").split(",")[0])
+                    if does_user_exist.strip("\n").split(",")[0] == username.get():
+                        error_label.grid(row=1, column=1, columnspan=2, padx=5, pady=10)
+                        error_label.config(text="Username already exists", fg="red")
+                        return
+                file.write(f"\n{username.get()},{password.get()},{balance}")
+'''
