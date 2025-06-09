@@ -10,14 +10,16 @@ import json
 #making sure the current directory is the same as the file
 os.chdir(os.path.dirname(os.path.abspath(__file__)))
 #initial constants
+#initial information of the user
 balance = 0
 transaction_history = []
 user_password = ""
 user_username = ""
 #where the user information is stored in the file used for writing into the file at the end
 user_info_location = 0
+#amount user deposits/withdraws
 amount = 0
-deposit_amount = 0
+
 #time for transaction data
 time = datetime.date.today()
 time = time.strftime("%a %d %b %Y")
@@ -30,27 +32,26 @@ def signup():
     signup_button.grid_forget()
     #creating label for login
     login_label.config(text="Create an account")
+
     #creating the label and entry for age
-    
     age_label.grid(row=2, column=1, padx=5, pady=10)
     age.grid(row=2, column=2, padx=5, pady=10)
+
     #creating the label and entry for username
-    
     username_label.grid(row=3, column=1, padx=5, pady=10)
     username.delete(0,END)
     username.grid(row=3, column=2, padx=5, pady=10)
+
     #creating the label and entry for password
-    
     password_label.grid(row=4, column=1, padx=5, pady=10)
     password.delete(0,END)
     password.grid(row=4, column=2, padx=5, pady=10)
+
     #creating the label and entry for confirm password
-    
     confirm_password_label.grid(row=5, column=1, padx=5, pady=10)
-    
     confirm_password.grid(row=5, column=2, padx=5, pady=10)
-    #creating the label and entry for signup button
     
+    #creating the label and entry for signup button
     signup_submit_button.grid(row=6, column=2, padx=5, pady=10)
     #creating the cancel button
     cancel_button.grid(row=6, column=1, padx=5, pady=10)
@@ -58,6 +59,7 @@ def signup():
     
 #function for submit button when signing up
 def signup_submit(username,password,confirm_password,age):
+    #globals location of the user information in the file
     global user_info_location
     try:      
         #checking if all the fields have been filled
@@ -108,41 +110,47 @@ def signup_submit(username,password,confirm_password,age):
     except ValueError:
         error_label.grid(row=1, column=1, columnspan=2, padx=5, pady=10)
         error_label.config(text="Invalid age. Please enter a valid number.", fg="red")
-
+    #function for login
 def login():
+    #removes the login and signup buttons
     login_button.grid_forget()
     signup_button.grid_forget()
-
+#changes the login label to show that the user is logging in
     login_label.config(text="log into your account")
-    
+    #creating the label and entry for username
     username_label.grid(row=2, column=1, padx=5, pady=5)
     username.delete(0,END)
     username.grid(row=2, column=2, padx=5, pady=5)
-    
+    #creating the label and entry for password
     password_label.grid(row=3, column=1, padx=5, pady=5)
     password.delete(0,END)
     password.grid(row=3, column=2, padx=5, pady=5)  
-    
+    #creating the submit button
     login_submit_button.grid(row=6, column=2, padx=5, pady=10)
     #creating the cancel button
     cancel_button.grid(row=6, column=1, padx=5, pady=10)
     
-
+#function for submit button when logging in
 def login_submit(username,password):
+    #globals balance transaction_history and user_info_location for main program use
     global balance
     global transaction_history
     global user_info_location
+    #gathering the users information fro mthe eternal file
     with open("user_account_info.json", "r") as file:
         users_information = json.load(file)
-        for does_user_exist in users_information:           
-            if does_user_exist["username"] == username.get():      
-                user_username = does_user_exist["username"]
+        for does_user_exist in users_information:    
+            #cehcks if the user exists       
+            if does_user_exist["username"] == username.get():    
+                #gathers the required information  
                 user_password = does_user_exist["password"]
                 balance = float(does_user_exist["balance"])
                 transaction_history = does_user_exist["transaction_history"]
+                #checks if the user entered the correct password
                 if user_password != password.get():
                     error_label.grid(row=1, column=1, columnspan=2, padx=5, pady=10)
                     error_label.config(text="incorrect password", fg="red")
+                    #stop the function to not run the new account code
                     return
                 else: 
                     #saves the position of the user in the file
@@ -151,20 +159,20 @@ def login_submit(username,password):
                                                                       'balance': balance, 'transaction_history': transaction_history})
                     login_screen.destroy()  # Destroys the login screen
                     main_program() # Call the main program function	
-                    
+                    #stop the function to not run the new account code
                     return
-        #     user_info_location = user_info_location+1
-        #error_label.grid(row=1, column=1, columnspan=1, pady=10)
-        #error_label.config(text="user does not exist", fg="red")   
-        new_account.grid(row=1, column=1, columnspan=2, pady=10)               
+        #creates the bew account button if the account inputted does not exist
+        new_account.grid(row=1, column=1, columnspan=2, pady=10)    
+    #close the file           
     file.close()
 
+#function to cancel the login and signup process, returns to the login screen
 def login_signup_cancel():
     #puts the log in and signup buttons back into the program
     login_label.config(text="Welcome to the Bank Account Simulator")
     login_button.grid(row=1, column=2, padx=5, pady=5)
     signup_button.grid(row=1, column=3, padx=5, pady=5)
-    #forgets all the labels and entry for login and signup
+    #forgets all the labels and entry for login and signup, every label and entry are added to make sure the page only has the necessary information
     age_label.grid_forget()
     age.grid_forget()
     username_label.grid_forget()
@@ -183,6 +191,7 @@ def login_signup_cancel():
     error_label.grid_forget()
     new_account.grid_forget()
 
+#function for new account creation from login screen, goes from login to signup
 def new_acc():
     login_signup_cancel()
     signup()
@@ -197,10 +206,10 @@ def main_program():
         #clears the entry box for previous enters
         entered_amounts.delete(0,"end")
         entered_amounts.grid(row=2, column=1, padx=10, pady=10,columnspan=4,)
-        #shows label
+        #shows and configure label for deposit
         amount_label.configure(text="Enter amount to deposit: ")
         amount_label.grid(row=1, column=1, padx=10, pady=10,columnspan=4)
-        #submit_button = Button(root, text="Submit", command=lambda: deposit_submit(entered_amounts,amount_label,submit_button,cancel_button))
+        #shows and configures the submit button to deposit
         submit_button.configure(command=lambda: deposit_submit(entered_amounts,amount_label,submit_button,cancel_button))
         submit_button.grid(row=3, column=2, padx=10, pady=10)
         #adds cancel button
@@ -217,7 +226,9 @@ def main_program():
                 #if the amount is negative it will give an error
                 raise ValueError
             balance += float(deposit_amount)
+            #adds deposit to transaction history
             transaction_history.append(f"{time} - Deposited {deposit_amount} ")
+            #updates the balance
             shown_balance.config(text=f"Your balance is: ${balance}")
 
             #removing entry information
@@ -226,7 +237,7 @@ def main_program():
             submit_button.grid_forget()
             cancel_button.grid_forget()
             label.config(text="deposit succesful",fg="black")
-  
+        
         except ValueError:
             label.config(text="Invalid input. Please enter a valid number.",fg="red")
 
@@ -250,9 +261,11 @@ def main_program():
     #function to submiot withdraw
     def withdraw_submit(entered_amounts,amount_label,submit_button,cancel_button):
         global balance
+        #sets the withraw to 0
         withdraw_amount = 0
+        #to catch errors
         try:
-        #checks if the deposit amount is a number
+            #withdraw amount
             withdraw_amount = round(float(entered_amounts.get()),2)
             if withdraw_amount < 0:
                 #if the amount is negative it will give an error
@@ -261,7 +274,9 @@ def main_program():
                 #if the amount is more than the balance it will give an error
                 raise ValueError
             balance -= float(withdraw_amount)
+            #adds withdraw to transaction history
             transaction_history.append(f"{time} - withdrew {withdraw_amount}")
+            #updates the balance
             shown_balance.config(text=f"Your balance is: ${balance}")
 
             #removing entry information
@@ -333,18 +348,18 @@ def main_program():
 
         def delayed_update(event=None):
             history.after(50, update_scroll_flags)
-
+        #moving the canvas
         canvas.bind("<Configure>", delayed_update)
 
         # Mouse wheel events
         def on_mouse_wheel(event):
             if can_scroll_verticaly[0]:
                 canvas.yview_scroll(-int(event.delta / 50), "units")
-
+        #when crolling sideways with mouse when holding shift
         def on_shift_mouse_wheel(event):
             if can_scroll_horizontaly[0]:
                 canvas.xview_scroll(-int(event.delta / 50), "units")
-
+        #moving the canvas
         canvas.bind_all("<MouseWheel>", on_mouse_wheel)
         canvas.bind_all("<Shift-MouseWheel>", on_shift_mouse_wheel)
 
@@ -357,12 +372,13 @@ def main_program():
             transaction_label = Label(history_frame, text=transaction, font=("Arial", 12), bg="green")
             transaction_label.pack(anchor="w", padx=10, pady=5)
 
-
+    #function to close the program and save user data to file
     def close_program():
         with open("user_account_info.json", "r") as file:
+            #getting the user information
             users_information = json.load(file)                      
             file.close
-        print(user_info_location)
+        #updating user information file
         users_information[user_info_location]["balance"] = balance
         users_information[user_info_location]["transaction_history"] = transaction_history
         with open("user_account_info.json", "w") as file:
@@ -425,7 +441,8 @@ def main_program():
     close = Button(left_col_frame, text="Close", command=close_program,bd=0)
     close.grid(row=4, column=0, padx=5,pady=5,sticky="n")
 
-    root.protocol("WM_DELETE_WINDOW", close_program)  # Handle window close event
+    #checks when the program is closed via the x and runs the close window function to save user data
+    root.protocol("WM_DELETE_WINDOW", close_program)  
     root.mainloop()  # Start the main loop of the program
     
 
