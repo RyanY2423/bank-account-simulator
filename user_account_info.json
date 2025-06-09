@@ -1,0 +1,14 @@
+[
+  {
+    "username": "username",
+    "password": "password",
+    "balance": 0.0,
+    "transaction_history": []
+  },
+  {
+    "username": "123",
+    "password": "123",
+    "balance": 100.0,
+    "transaction_history": []
+  }
+]
