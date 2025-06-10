@@ -34,27 +34,27 @@ def signup():
     login_label.config(text="Create an account")
 
     #creating the label and entry for age
-    age_label.grid(row=2, column=1, padx=5, pady=10)
-    age.grid(row=2, column=2, padx=5, pady=10)
+    age_label.grid(row=2, column=3, padx=5, pady=10,columnspan=2)
+    age.grid(row=2, column=5, padx=5, pady=10,columnspan=2)
 
     #creating the label and entry for username
-    username_label.grid(row=3, column=1, padx=5, pady=10)
+    username_label.grid(row=3, column=3, padx=5, pady=10,columnspan=2)
     username.delete(0,END)
-    username.grid(row=3, column=2, padx=5, pady=10)
+    username.grid(row=3, column=5, padx=5, pady=10,columnspan=2)
 
     #creating the label and entry for password
-    password_label.grid(row=4, column=1, padx=5, pady=10)
+    password_label.grid(row=4, column=3, padx=5, pady=10,columnspan=2)
     password.delete(0,END)
-    password.grid(row=4, column=2, padx=5, pady=10)
+    password.grid(row=4, column=5, padx=5, pady=10,columnspan=2)
 
     #creating the label and entry for confirm password
-    confirm_password_label.grid(row=5, column=1, padx=5, pady=10)
-    confirm_password.grid(row=5, column=2, padx=5, pady=10)
+    confirm_password_label.grid(row=5, column=3, padx=5, pady=10,columnspan=2)
+    confirm_password.grid(row=5, column=5, padx=5, pady=10,columnspan=2)
     
     #creating the label and entry for signup button
-    signup_submit_button.grid(row=6, column=2, padx=5, pady=10)
+    signup_submit_button.grid(row=6, column=5, padx=5, pady=10)
     #creating the cancel button
-    cancel_button.grid(row=6, column=1, padx=5, pady=10)
+    cancel_button.grid(row=6, column=4, padx=5, pady=10)
     
     
 #function for submit button when signing up
@@ -64,20 +64,20 @@ def signup_submit(username,password,confirm_password,age):
     try:      
         #checking if all the fields have been filled
         if username.get().strip(" ") == "" or password.get() == "" or confirm_password.get() == "":
-            error_label.grid(row=1, column=1, columnspan=2, padx=5, pady=10)
+            error_label.grid(row=1, column=1, columnspan=12, padx=5, pady=10)
             error_label.config(text="All fields are required", fg="red")
         #checks if the password and confirmed password is the same
         elif password.get() != confirm_password.get():
-                error_label.grid(row=1, column=1, columnspan=2, padx=5, pady=10)
+                error_label.grid(row=1, column=5, columnspan=2, padx=5, pady=10)
                 #tells the users the passwords are not the same
                 error_label.config(text="Passwords do not match", fg="red")
         #checking if their age is over 13
         elif int(age.get()) <13:
-            error_label.grid(row=1, column=1, columnspan=2, padx=5, pady=10)
+            error_label.grid(row=1, column=5, columnspan=2, padx=5, pady=10)
             error_label.config(text="You must be at least 13 years old to create an account", fg="red")
         #checking if their age is under 100
         elif int(age.get()) >100:
-            error_label.grid(row=1, column=1, columnspan=2, padx=5, pady=10)
+            error_label.grid(row=1, column=5, columnspan=2, padx=5, pady=10)
             error_label.config(text="Enter a valid age", fg="red")
         else:
             #opens file with user data
@@ -118,17 +118,17 @@ def login():
 #changes the login label to show that the user is logging in
     login_label.config(text="Log into your account")
     #creating the label and entry for username
-    username_label.grid(row=2, column=1, padx=5, pady=5)
+    username_label.grid(row=2, column=4, padx=5, pady=5,columnspan=2)
     username.delete(0,END)
-    username.grid(row=2, column=2, padx=5, pady=5)
+    username.grid(row=2, column=6, padx=2, pady=5,columnspan=2)
     #creating the label and entry for password
-    password_label.grid(row=3, column=1, padx=5, pady=5)
+    password_label.grid(row=3, column=4, padx=5, pady=5,columnspan=2)
     password.delete(0,END)
-    password.grid(row=3, column=2, padx=5, pady=5)  
+    password.grid(row=3, column=6, padx=5, pady=5,columnspan=2)  
     #creating the submit button
-    login_submit_button.grid(row=6, column=2, padx=5, pady=10)
+    login_submit_button.grid(row=6, column=6, padx=5, pady=10)
     #creating the cancel button
-    cancel_button.grid(row=6, column=1, padx=5, pady=10)
+    cancel_button.grid(row=6, column=5, padx=5, pady=10)
     
 #function for submit button when logging in
 def login_submit(username,password):
@@ -148,8 +148,8 @@ def login_submit(username,password):
                 transaction_history = does_user_exist["transaction_history"]
                 #checks if the user entered the correct password
                 if user_password != password.get():
-                    error_label.grid(row=1, column=1, columnspan=2, padx=5, pady=10)
                     error_label.config(text="Incorrect password", fg="red")
+                    error_label.grid(row=1, column=1, columnspan=12, padx=5, pady=10)
                     #stop the function to not run the new account code
                     return
                 else: 
@@ -162,7 +162,7 @@ def login_submit(username,password):
                     #stop the function to not run the new account code
                     return
         #creates the bew account button if the account inputted does not exist
-        new_account.grid(row=1, column=1, columnspan=2, pady=10)    
+        new_account.grid(row=1, column=1, columnspan=12, pady=10)    
     #close the file           
     file.close()
 
@@ -170,8 +170,8 @@ def login_submit(username,password):
 def login_signup_cancel():
     #puts the log in and signup buttons back into the program
     login_label.config(text="Welcome to the Bank Account Simulator")
-    login_button.grid(row=1, column=2, padx=5, pady=5)
-    signup_button.grid(row=1, column=3, padx=5, pady=5)
+    login_button.grid(row=1, column=6, padx=5, pady=5)
+    signup_button.grid(row=1, column=7, padx=5, pady=5)
     #forgets all the labels and entry for login and signup, every label and entry are added to make sure the page only has the necessary information
     age_label.grid_forget()
     age.grid_forget()
@@ -459,39 +459,35 @@ login_screen.config(bg="#252526")
 
 #centering the items
 login_screen.grid_columnconfigure(0, weight=1)
-login_screen.grid_columnconfigure(5, weight=1)
+login_screen.grid_columnconfigure(13, weight=1)
 
 #creating a label for the login screen
-login_label = Label(login_screen, text="Welcome to the Bank Account Simulator",bg="#252526",fg="#e7efef")
-login_label.grid(row=0, column=1, padx=5, pady=5, columnspan=4)
-login_button = Button(login_screen, text="Login", command=lambda: login(), bd=0,bg="#252526",fg="#e7efef")
-login_button.grid(row=1, column=2, padx=5, pady=5)
-signup_button = Button(login_screen, text="Signup", command=lambda: signup(), bd=0,bg="#252526",fg="#e7efef")
-signup_button.grid(row=1, column=3, padx=5, pady=5)
-cancel_button = Button(login_screen, text="Cancel", bd=0,command=lambda:login_signup_cancel(),bg="#252526",fg="#e7efef")
+login_label = Label(login_screen, text="Welcome to the Bank Account Simulator",bg="#252526",fg="#e7efef",font=(None, 20))
+login_label.grid(row=0, column=1, padx=5, pady=5, columnspan=12)
+login_button = Button(login_screen, text="Login", command=lambda: login(), bd=0,bg="#383839",fg="#e7efef",font=(None, 12),activebackground="#252526")
+login_button.grid(row=1, column=6, padx=5, pady=5)
+signup_button = Button(login_screen, text="Signup", command=lambda: signup(), bd=0,bg="#383839",fg="#e7efef",font=(None, 12))
+signup_button.grid(row=1, column=7, padx=5, pady=5)
+cancel_button = Button(login_screen, text="Cancel", bd=0,command=lambda:login_signup_cancel(),bg="#383839",fg="#e7efef",font=(None, 12),activebackground="#252526")
 #creating error label which will be used if an error occurs
-error_label = Label(login_screen, text="", fg="red",bg="#252526")
+error_label = Label(login_screen, text="", fg="red",bg="#252526", font=(None, 12))
 
 #creating labels for the sign up button
-age_label = Label(login_screen, text="Age:",bg="#252526",fg="#e7efef")
+age_label = Label(login_screen, text="Age:",bg="#252526",fg="#e7efef",font=(None, 12))
 age = Entry(login_screen)  
-username_label = Label(login_screen, text="Username:",bg="#252526",fg="#e7efef")
+username_label = Label(login_screen, text="Username:",bg="#252526",fg="#e7efef",font=(None, 12))
 username = Entry(login_screen)
-password_label = Label(login_screen, text="Password:",bg="#252526",fg="#e7efef")
+password_label = Label(login_screen, text="Password:",bg="#252526",fg="#e7efef",font=(None, 12))
 password = Entry(login_screen,show="*")
-confirm_password_label = Label(login_screen, text="Confirm Password:",bg="#252526",fg="#e7efef") 
+confirm_password_label = Label(login_screen, text="Confirm Password:",bg="#252526",fg="#e7efef",font=(None, 12)) 
 confirm_password = Entry(login_screen,show="*")#show="*" used to hide the password user enters
-signup_submit_button = Button(login_screen, text="Submit", command=lambda: signup_submit(username,password,confirm_password,age), bd=0,bg="#252526",fg="#e7efef")
+signup_submit_button = Button(login_screen, text="Submit", command=lambda: signup_submit(username,password,confirm_password,age), bd=0,bg="#383839",fg="#e7efef",font=(None, 12))
 
 
 #creating labels for the log in button
-username_label = Label(login_screen, text="Username:",bg="#252526",fg="#e7efef")
-username = Entry(login_screen)
-password_label = Label(login_screen, text="Password:",bg="#252526",fg="#e7efef")
-password = Entry(login_screen,show="*")
-login_submit_button = Button(login_screen, text="Submit", command=lambda: login_submit(username,password), bd=0,bg="#252526",fg="#e7efef",activebackground="#252526")
+login_submit_button = Button(login_screen, text="Submit", command=lambda: login_submit(username,password), bd=0,bg="#383839",fg="#e7efef",activebackground="#252526",font=(None, 12))
 #button for creating a new account if login fails for account not existing
-new_account = Button(login_screen,text="User does not exist. Create new account?", command=lambda:new_acc(),bd=0,fg="red",bg="#252526",)
+new_account = Button(login_screen,text="User does not exist. Create new account?", command=lambda:new_acc(),bd=0,fg="red",bg="#252526",font=(None, 12))
 #running the login screen
 login_screen.mainloop()
 
