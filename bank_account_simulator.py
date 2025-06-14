@@ -32,30 +32,24 @@ def signup():
     signup_button.grid_forget()
     #creating label for login
     login_label.config(text="Create an account")
-
     #creating the label and entry for age
-    age_label.grid(row=2, column=1, padx=5, pady=10)
-    age.grid(row=2, column=2, padx=5, pady=10)
-
+    age_label.grid(row=2, column=3, padx=5, pady=10,columnspan=2)
+    age.grid(row=2, column=5, padx=5, pady=10,columnspan=2)
     #creating the label and entry for username
-    username_label.grid(row=3, column=1, padx=5, pady=10)
+    username_label.grid(row=3, column=3, padx=5, pady=10,columnspan=2)
     username.delete(0,END)
-    username.grid(row=3, column=2, padx=5, pady=10)
-
+    username.grid(row=3, column=5, padx=5, pady=10,columnspan=2)
     #creating the label and entry for password
-    password_label.grid(row=4, column=1, padx=5, pady=10)
+    password_label.grid(row=4, column=3, padx=5, pady=10,columnspan=2)
     password.delete(0,END)
-    password.grid(row=4, column=2, padx=5, pady=10)
-
+    password.grid(row=4, column=5, padx=5, pady=10,columnspan=2)
     #creating the label and entry for confirm password
-    confirm_password_label.grid(row=5, column=1, padx=5, pady=10)
-    confirm_password.grid(row=5, column=2, padx=5, pady=10)
-    
+    confirm_password_label.grid(row=5, column=3, padx=5, pady=10,columnspan=2)
+    confirm_password.grid(row=5, column=5, padx=5, pady=10,columnspan=2)
     #creating the label and entry for signup button
-    signup_submit_button.grid(row=6, column=2, padx=5, pady=10)
+    signup_submit_button.grid(row=6, column=5, padx=5, pady=10)
     #creating the cancel button
-    cancel_button.grid(row=6, column=1, padx=5, pady=10)
-    
+    cancel_button.grid(row=6, column=4, padx=5, pady=10)
     
 #function for submit button when signing up
 def signup_submit(username,password,confirm_password,age):
@@ -64,21 +58,21 @@ def signup_submit(username,password,confirm_password,age):
     try:      
         #checking if all the fields have been filled
         if username.get().strip(" ") == "" or password.get() == "" or confirm_password.get() == "":
-            error_label.grid(row=1, column=1, columnspan=2, padx=5, pady=10)
+            error_label.grid(row=1, column=1, columnspan=12, padx=5, pady=10)
             error_label.config(text="All fields are required", fg="red")
         #checks if the password and confirmed password is the same
         elif password.get() != confirm_password.get():
-                error_label.grid(row=1, column=1, columnspan=2, padx=5, pady=10)
+                error_label.grid(row=1, column=5, columnspan=2, padx=5, pady=10)
                 #tells the users the passwords are not the same
                 error_label.config(text="Passwords do not match", fg="red")
         #checking if their age is over 13
         elif int(age.get()) <13:
-            error_label.grid(row=1, column=1, columnspan=2, padx=5, pady=10)
+            error_label.grid(row=1, column=1, columnspan=12, padx=5, pady=10)
             error_label.config(text="You must be at least 13 years old to create an account", fg="red")
         #checking if their age is under 100
         elif int(age.get()) >100:
-            error_label.grid(row=1, column=1, columnspan=2, padx=5, pady=10)
-            error_label.config(text="enter a valid age", fg="red")
+            error_label.grid(row=1, column=1, columnspan=12, padx=5, pady=10)
+            error_label.config(text="Enter a valid age", fg="red")
         else:
             #opens file with user data
             with open("user_account_info.json", "r") as file:
@@ -87,8 +81,8 @@ def signup_submit(username,password,confirm_password,age):
                 for does_user_exist in users_information:
                     #if user is in file show message
                     if does_user_exist["username"] == username.get():
-                        error_label.grid(row=1, column=1, columnspan=2, padx=5, pady=10)
-                        error_label.config(text="account already exists", fg="red")
+                        error_label.grid(row=1, column=1, columnspan=12, padx=5, pady=10)
+                        error_label.config(text="Account already exists", fg="red")
                         file.close
                         #ending the function to not run the adding new account to file
                         return
@@ -116,19 +110,19 @@ def login():
     login_button.grid_forget()
     signup_button.grid_forget()
 #changes the login label to show that the user is logging in
-    login_label.config(text="log into your account")
+    login_label.config(text="Log into your account")
     #creating the label and entry for username
-    username_label.grid(row=2, column=1, padx=5, pady=5)
+    username_label.grid(row=2, column=4, padx=5, pady=5,columnspan=2)
     username.delete(0,END)
-    username.grid(row=2, column=2, padx=5, pady=5)
+    username.grid(row=2, column=6, padx=2, pady=5,columnspan=2)
     #creating the label and entry for password
-    password_label.grid(row=3, column=1, padx=5, pady=5)
+    password_label.grid(row=3, column=4, padx=5, pady=5,columnspan=2)
     password.delete(0,END)
-    password.grid(row=3, column=2, padx=5, pady=5)  
+    password.grid(row=3, column=6, padx=5, pady=5,columnspan=2)  
     #creating the submit button
-    login_submit_button.grid(row=6, column=2, padx=5, pady=10)
+    login_submit_button.grid(row=6, column=6, padx=5, pady=10)
     #creating the cancel button
-    cancel_button.grid(row=6, column=1, padx=5, pady=10)
+    cancel_button.grid(row=6, column=5, padx=5, pady=10)
     
 #function for submit button when logging in
 def login_submit(username,password):
@@ -148,8 +142,9 @@ def login_submit(username,password):
                 transaction_history = does_user_exist["transaction_history"]
                 #checks if the user entered the correct password
                 if user_password != password.get():
-                    error_label.grid(row=1, column=1, columnspan=2, padx=5, pady=10)
-                    error_label.config(text="incorrect password", fg="red")
+                    error_label.config(text="Incorrect password", fg="red")
+                    new_account.grid_forget()  # Forgets the new account button
+                    error_label.grid(row=1, column=1, columnspan=12, padx=5, pady=10)
                     #stop the function to not run the new account code
                     return
                 else: 
@@ -162,7 +157,8 @@ def login_submit(username,password):
                     #stop the function to not run the new account code
                     return
         #creates the bew account button if the account inputted does not exist
-        new_account.grid(row=1, column=1, columnspan=2, pady=10)    
+        new_account.grid(row=1, column=1, columnspan=12, pady=10) 
+           
     #close the file           
     file.close()
 
@@ -170,8 +166,8 @@ def login_submit(username,password):
 def login_signup_cancel():
     #puts the log in and signup buttons back into the program
     login_label.config(text="Welcome to the Bank Account Simulator")
-    login_button.grid(row=1, column=2, padx=5, pady=5)
-    signup_button.grid(row=1, column=3, padx=5, pady=5)
+    login_button.grid(row=1, column=6, padx=5, pady=5)
+    signup_button.grid(row=1, column=7, padx=5, pady=5)
     #forgets all the labels and entry for login and signup, every label and entry are added to make sure the page only has the necessary information
     age_label.grid_forget()
     age.grid_forget()
@@ -205,15 +201,15 @@ def main_program():
         #sets up the label and entry box for the deposits
         #clears the entry box for previous enters
         entered_amounts.delete(0,"end")
-        entered_amounts.grid(row=2, column=1, padx=10, pady=10,columnspan=4,)
+        entered_amounts.grid(row=2, column=1, padx=10, pady=10,columnspan=8,)
         #shows and configure label for deposit
         amount_label.configure(text="Enter amount to deposit: ")
-        amount_label.grid(row=1, column=1, padx=10, pady=10,columnspan=4)
+        amount_label.grid(row=1, column=1, padx=10, pady=10,columnspan=8)
         #shows and configures the submit button to deposit
         submit_button.configure(command=lambda: deposit_submit(entered_amounts,amount_label,submit_button,cancel_button))
-        submit_button.grid(row=3, column=2, padx=10, pady=10)
+        submit_button.grid(row=3, column=4, padx=10, pady=10)
         #adds cancel button
-        cancel_button.grid(row=3, column=3, padx=5, pady=10)
+        cancel_button.grid(row=3, column=5, padx=5, pady=10)
 
 
     #function to submit deposit 
@@ -229,14 +225,14 @@ def main_program():
             #adds deposit to transaction history
             transaction_history.append(f"{time} - Deposited {deposit_amount} ")
             #updates the balance
-            shown_balance.config(text=f"Your balance is: ${balance}")
+            shown_balance.config(text=f"Your balance is: ${round(balance,2)}")
 
             #removing entry information
             entered_amounts.grid_forget()  
             amount_label.grid_forget()  
             submit_button.grid_forget()
             cancel_button.grid_forget()
-            label.config(text="deposit succesful",fg="black")
+            label.config(text="Deposit successful",fg="#e7efef")
         
         except ValueError:
             label.config(text="Invalid input. Please enter a valid number.",fg="red")
@@ -248,15 +244,15 @@ def main_program():
         label.config(text="")
         #sets up the label and entry box for the withdraw
         entered_amounts.delete(0,"end")
-        entered_amounts.grid(row=2, column=1, padx=10, pady=10,columnspan=4,)
+        entered_amounts.grid(row=2, column=1, padx=10, pady=10,columnspan=8,)
         #adds amount labels
         amount_label.configure(text="Enter amount to withdraw: ")
-        amount_label.grid(row=1, column=1, padx=10, pady=10,columnspan=4)
+        amount_label.grid(row=1, column=1, padx=10, pady=10,columnspan=8)
         #adds submit button
         submit_button.configure(command=lambda: withdraw_submit(entered_amounts,amount_label,submit_button,cancel_button))
-        submit_button.grid(row=3, column=2, padx=5, pady=10)
+        submit_button.grid(row=3, column=4, padx=10, pady=10)
         #adds cancel button
-        cancel_button.grid(row=3, column=3, padx=5, pady=10)
+        cancel_button.grid(row=3, column=5, padx=5, pady=10)
 
     #function to submiot withdraw
     def withdraw_submit(entered_amounts,amount_label,submit_button,cancel_button):
@@ -275,22 +271,22 @@ def main_program():
                 raise ValueError
             balance -= float(withdraw_amount)
             #adds withdraw to transaction history
-            transaction_history.append(f"{time} - withdrew {withdraw_amount}")
+            transaction_history.append(f"{time} - Withdrew {round(withdraw_amount,2)}")
             #updates the balance
-            shown_balance.config(text=f"Your balance is: ${balance}")
+            shown_balance.config(text=f"Your balance is: ${round(balance,2)}")
 
             #removing entry information
             entered_amounts.grid_forget()  
             amount_label.grid_forget()  
             submit_button.grid_forget()
-            label.config(text="withdraw succesful",fg="black")
+            label.config(text="Withdraw successful",fg="#e7efef")
 
             #removing cancel button
             cancel_button.grid_forget()
         #catching errors
         except ValueError:
             if withdraw_amount > balance:
-                label.config(text="insufficient funds",fg="red")
+                label.config(text="Insufficient funds",fg="red")
             else:
                 label.config(text="Invalid input. Please enter a valid number.", fg="red")
 
@@ -300,7 +296,7 @@ def main_program():
         entered_amounts.grid_forget()  
         amount_label.grid_forget()  
         submit_button.grid_forget()
-        label.config(text="cancelled",fg="black")
+        label.config(text="Cancelled",fg="#e7efef")
 
         #removing itself
         cancel_button.grid_forget()
@@ -317,7 +313,7 @@ def main_program():
         main_frame.pack(fill=BOTH, expand=1)
 
         # Canvas
-        canvas = Canvas(main_frame, bg="blue")
+        canvas = Canvas(main_frame,bg="#252526")
         canvas.pack(side=LEFT, fill=BOTH, expand=True)
 
         # Scrollbar
@@ -326,7 +322,7 @@ def main_program():
         canvas.configure(yscrollcommand=my_scrollbar.set)
 
         # Frame in which the contents go into
-        history_frame = Frame(canvas, bg="green")
+        history_frame = Frame(canvas,bg="#252526")
         canvas.create_window((0, 0), window=history_frame, anchor="nw")
 
         # Track scrollability
@@ -334,6 +330,7 @@ def main_program():
         can_scroll_horizontaly = [False]
 
         # Update scrollregion and scrollability flags
+        #makes the scroll wheel scrollable when the content is larger than the canvas
         def update_scroll_flags():
             canvas.update_idletasks()
             bbox = canvas.bbox("all")
@@ -364,12 +361,12 @@ def main_program():
         canvas.bind_all("<Shift-MouseWheel>", on_shift_mouse_wheel)
 
         # Header
-        label = Label(history_frame, text="Transaction History", font=("Arial", 20), bg="red")
+        label = Label(history_frame, text="Transaction History", font=("Arial", 20),bg="#131314",fg="#e7efef")
         label.pack()
 
         # Transaction content
         for transaction in transaction_history:
-            transaction_label = Label(history_frame, text=transaction, font=("Arial", 12), bg="green")
+            transaction_label = Label(history_frame, text=transaction, font=("Arial", 12),bg="#252526",fg="#e7efef")
             transaction_label.pack(anchor="w", padx=10, pady=5)
 
     #function to close the program and save user data to file
@@ -379,76 +376,76 @@ def main_program():
             users_information = json.load(file)                      
             file.close
         #updating user information file
-        users_information[user_info_location]["balance"] = balance
+        users_information[user_info_location]["balance"] = round(balance,2)
         users_information[user_info_location]["transaction_history"] = transaction_history
         with open("user_account_info.json", "w") as file:
+            #puts the information to the external file idented for better viewing
             json.dump(users_information, file, indent=2)
         root.destroy()
 
     
-    
-
 
     #main program
     #creating a window
     root = Tk()
     root.title("Bank Account Simulator")
-    root.geometry("800x600")
+    root.geometry("1000x600")
     #colour of the background
     root.config(background="#252526")
 
-    #centering the items
-    root.grid_columnconfigure(0, weight=0)
+    #centering the items o0f the root
+    root.grid_columnconfigure(1, weight=0)
     root.grid_columnconfigure(5, weight=1)
+    
 
     #creating a fram for the main information for deposit and withdraw functions
-    main_frame = Frame(root)
-    main_frame.grid(row=0, column=1, columnspan=4)
+    main_frame = Frame(root,bg="#252526")
+    main_frame.grid(row=0, column=2, columnspan=4)
+#puts the items in the middle of the main frame
+    main_frame.grid_columnconfigure(0, weight=1)
+    main_frame.grid_columnconfigure(9, weight=1)
 
     #creating labels for the main page
-    shown_balance = Label(main_frame, text=f"your balance is: ${balance}",font=("Arial",20))
-    shown_balance.grid(row=0, column=1, padx=5, pady=5,columnspan=4)
+    shown_balance = Label(main_frame, text=f"Your balance is: ${balance}",font=("Arial",30),bg="#252526",fg="#e7efef")
+    shown_balance.grid(row=0, column=1, padx=5, pady=5,columnspan=8)
     #label used for messages
-    label = Label(main_frame, text=f"")#,width=40
-    label.grid(row=1, column=0, padx=5, pady=10,columnspan=4,rowspan=2)
+    label = Label(main_frame, text=f"",bg="#252526",fg="#e7efef",font=(None, 12))
+    label.grid(row=1, column=1, padx=5, pady=10,columnspan=8,rowspan=2)
 
     #entery information
-    entered_amounts = Entry(main_frame)
-    amount_label = Label(main_frame, text="Enter amount to deposit: ")
+    entered_amounts = Entry(main_frame,font=("Arial", 14),)
+    amount_label = Label(main_frame, text="Enter amount to deposit: ",bg="#252526",fg="#e7efef",font=("Arial", 14))
     submit_button = Button(main_frame, text="Submit", command=lambda: deposit_submit(entered_amounts,amount_label,submit_button,cancel_button))
     cancel_button = Button(main_frame, text="Cancel", command=lambda:cancel(entered_amounts,amount_label,submit_button,cancel_button))
 
     #buttons for user actions
     #frame for astethics
-    left_col_frame = Frame(root, bg="#131314", width=70,height=600)
+    left_col_frame = Frame(root, bg="#131314", width=100,height=600)#70 original
     left_col_frame.grid(row=0, column=0, rowspan=10, sticky="nsew")
     left_col_frame.grid_propagate(False)
+    #used to push the buttons down for a better look
     spacer = Label(left_col_frame, text="", bg="#131314")
     spacer.grid(row=0, column=0, pady=10)
     #deposit button
-    deposit_button = Button(left_col_frame, text="Deposit", command=lambda:deposit(),bd=0)
-    deposit_button.grid(row=1, column=0, padx=5,pady=5, sticky="n")
+    deposit_button = Button(left_col_frame, text="Deposit", command=lambda:deposit(),bd=0,font=("arial", 14),fg="#e7efef",bg="#383839",activebackground="#252526")
+    deposit_button.grid(row=1, column=0, padx=5,pady=10, sticky="n")
 
     #withdraw button
-    withdraw_button = Button(left_col_frame, text="Withdraw", command=lambda:withdraw(),bd=0)
-    withdraw_button.grid(row=2, column=0, padx=5,pady=5,sticky="n")
+    withdraw_button = Button(left_col_frame, text="Withdraw", command=lambda:withdraw(),bd=0,font=("arial", 14),fg="#e7efef",bg="#383839",activebackground="#252526")
+    withdraw_button.grid(row=2, column=0, padx=5,pady=10,sticky="n")
 
     #history button
-    history_button = Button(left_col_frame, text="History",command=lambda:user_history(), bd=0)
-    history_button.grid(row=3, column=0, padx=5,pady=5,sticky="n")
+    history_button = Button(left_col_frame, text="History",command=lambda:user_history(), bd=0,font=("arial", 14),fg="#e7efef",bg="#383839",activebackground="#252526")
+    history_button.grid(row=3, column=0, padx=5,pady=10,sticky="n")
 
     #close button
-    close = Button(left_col_frame, text="Close", command=close_program,bd=0)
-    close.grid(row=4, column=0, padx=5,pady=5,sticky="n")
+    close = Button(left_col_frame, text="Close", command=close_program,bd=0,font=("arial", 14),fg="#e7efef",bg="#383839",activebackground="#252526")
+    close.grid(row=4, column=0, padx=5,pady=10,sticky="n")
 
     #checks when the program is closed via the x and runs the close window function to save user data
     root.protocol("WM_DELETE_WINDOW", close_program)  
     root.mainloop()  # Start the main loop of the program
-    
 
-    
-
-    #running the main loop, will run after the login screen is closed
 
 
 #setting up login signup screen
@@ -459,39 +456,36 @@ login_screen.config(bg="#252526")
 
 #centering the items
 login_screen.grid_columnconfigure(0, weight=1)
-login_screen.grid_columnconfigure(5, weight=1)
+login_screen.grid_columnconfigure(13, weight=1)
 
 #creating a label for the login screen
-login_label = Label(login_screen, text="Welcome to the Bank Account Simulator",bg="#252526",fg="#e7efef")
-login_label.grid(row=0, column=1, padx=5, pady=5, columnspan=4)
-login_button = Button(login_screen, text="Login", command=lambda: login(), bd=0,bg="#252526",fg="#e7efef")
-login_button.grid(row=1, column=2, padx=5, pady=5)
-signup_button = Button(login_screen, text="signup", command=lambda: signup(), bd=0,bg="#252526",fg="#e7efef")
-signup_button.grid(row=1, column=3, padx=5, pady=5)
-cancel_button = Button(login_screen, text="Cancel", bd=0,command=lambda:login_signup_cancel(),bg="#252526",fg="#e7efef")
+login_label = Label(login_screen, text="Welcome to the Bank Account Simulator",bg="#252526",fg="#e7efef",font=("arial", 20))
+login_label.grid(row=0, column=1, padx=5, pady=5, columnspan=12)
+login_button = Button(login_screen, text="Login", command=lambda: login(), bd=0,bg="#383839",fg="#e7efef",font=("arial", 12),activebackground="#252526")
+login_button.grid(row=1, column=6, padx=5, pady=5)
+signup_button = Button(login_screen, text="Signup", command=lambda: signup(), bd=0,bg="#383839",fg="#e7efef",font=("arial", 12))
+signup_button.grid(row=1, column=7, padx=5, pady=5)
+cancel_button = Button(login_screen, text="Cancel", bd=0,command=lambda:login_signup_cancel(),bg="#383839",fg="#e7efef",font=("arial", 12),activebackground="#252526")
 #creating error label which will be used if an error occurs
-error_label = Label(login_screen, text="", fg="red",bg="#252526")
+error_label = Label(login_screen, text="", fg="red",bg="#252526", font=("arial", 12))
 
 #creating labels for the sign up button
-age_label = Label(login_screen, text="Age:",bg="#252526",fg="#e7efef")
+#age, username, password and confirm password labels and entries
+age_label = Label(login_screen, text="Age:",bg="#252526",fg="#e7efef",font=("arial", 12))
 age = Entry(login_screen)  
-username_label = Label(login_screen, text="Username:",bg="#252526",fg="#e7efef")
+username_label = Label(login_screen, text="Username:",bg="#252526",fg="#e7efef",font=("arial", 12))
 username = Entry(login_screen)
-password_label = Label(login_screen, text="Password:",bg="#252526",fg="#e7efef")
+password_label = Label(login_screen, text="Password:",bg="#252526",fg="#e7efef",font=("arial", 12))
 password = Entry(login_screen,show="*")
-confirm_password_label = Label(login_screen, text="Confirm Password:",bg="#252526",fg="#e7efef") 
+confirm_password_label = Label(login_screen, text="Confirm Password:",bg="#252526",fg="#e7efef",font=("arial", 12)) 
 confirm_password = Entry(login_screen,show="*")#show="*" used to hide the password user enters
-signup_submit_button = Button(login_screen, text="Submit", command=lambda: signup_submit(username,password,confirm_password,age), bd=0,bg="#252526",fg="#e7efef")
+signup_submit_button = Button(login_screen, text="Submit", command=lambda: signup_submit(username,password,confirm_password,age), bd=0,bg="#383839",fg="#e7efef",font=("arial", 12))
 
 
 #creating labels for the log in button
-username_label = Label(login_screen, text="Username:",bg="#252526",fg="#e7efef")
-username = Entry(login_screen)
-password_label = Label(login_screen, text="Password:",bg="#252526",fg="#e7efef")
-password = Entry(login_screen,show="*")
-login_submit_button = Button(login_screen, text="Submit", command=lambda: login_submit(username,password), bd=0,bg="#252526",fg="#e7efef",activebackground="#252526")
+login_submit_button = Button(login_screen, text="Submit", command=lambda: login_submit(username,password), bd=0,bg="#383839",fg="#e7efef",activebackground="#252526",font=("arial", 12))
 #button for creating a new account if login fails for account not existing
-new_account = Button(login_screen,text="user does not exist, create new account?", command=lambda:new_acc(),bd=0,fg="red",bg="#252526",)
+new_account = Button(login_screen,text="User does not exist. Create new account?", command=lambda:new_acc(),bd=0,fg="red",bg="#252526",font=("arial", 12))
 #running the login screen
 login_screen.mainloop()
 
