@@ -330,6 +330,7 @@ def main_program():
         can_scroll_horizontaly = [False]
 
         # Update scrollregion and scrollability flags
+        #makes the scroll wheel scrollable when the content is larger than the canvas
         def update_scroll_flags():
             canvas.update_idletasks()
             bbox = canvas.bbox("all")
@@ -378,6 +379,7 @@ def main_program():
         users_information[user_info_location]["balance"] = round(balance,2)
         users_information[user_info_location]["transaction_history"] = transaction_history
         with open("user_account_info.json", "w") as file:
+            #puts the information to the external file idented for better viewing
             json.dump(users_information, file, indent=2)
         root.destroy()
 
@@ -391,7 +393,7 @@ def main_program():
     #colour of the background
     root.config(background="#252526")
 
-    #centering the items
+    #centering the items o0f the root
     root.grid_columnconfigure(1, weight=0)
     root.grid_columnconfigure(5, weight=1)
     
@@ -399,7 +401,7 @@ def main_program():
     #creating a fram for the main information for deposit and withdraw functions
     main_frame = Frame(root,bg="#252526")
     main_frame.grid(row=0, column=2, columnspan=4)
-
+#puts the items in the middle of the main frame
     main_frame.grid_columnconfigure(0, weight=1)
     main_frame.grid_columnconfigure(9, weight=1)
 
@@ -443,11 +445,7 @@ def main_program():
     #checks when the program is closed via the x and runs the close window function to save user data
     root.protocol("WM_DELETE_WINDOW", close_program)  
     root.mainloop()  # Start the main loop of the program
-    
 
-    
-
-    #running the main loop, will run after the login screen is closed
 
 
 #setting up login signup screen
